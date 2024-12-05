@@ -44,7 +44,7 @@ class Categories(db.Model):
     appointment = sa.Column(sa.String(255))
     brand = sa.Column(sa.String(255))
 
-    tovars = relationship('Tovar', back_populates='category')
+    tovars = db.relationship('Tovar', back_populates='category', lazy='dynamic')
 
 
 class Tovar(db.Model):
