@@ -39,7 +39,7 @@ def tovar_add():
         db.session.add(data)
         db.session.commit()
         flash('Товар добавлен')
-        return redirect(url_for('index'))
+        return redirect(url_for('home.index'))
     return render_template('tovar_add.html', form=form)
 
 
@@ -50,7 +50,7 @@ def del_tovar(tovar_id: int):
     # data = Tovar.query.where(Tovar.id == tovar_id).one()
     db.session.delete(data)
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('home.index'))
 
 
 @app.route('/tovar_kupit', methods=['GET', 'POST'])
@@ -63,7 +63,7 @@ def tovar_kupit():
     data.ostatok = data.ostatok - 1
     db.session.commit()
     print(data)
-    return redirect(url_for('index'))
+    return redirect(url_for('home.index'))
 
 
 @app.route('/tovar_page', methods=['GET', 'POST'])
@@ -80,4 +80,4 @@ def name_tovar(tovar_id: int, new_name: str):
     data = Tovar.query.get(tovar_id)
     data.name = new_name
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('home.index'))
