@@ -14,4 +14,4 @@ def index():
     tovar = Tovar.query.all()
     kolvo = len(korzin)
 
-    return render_template('index.html', tovars=tovar, korzina=kolvo)
+    return render_template('home/index.html', tovars=tovar, korzina=kolvo)
