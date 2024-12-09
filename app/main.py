@@ -39,12 +39,13 @@ from .auth.auth import auth_bp
 from .home.home import home_bp
 from .error.error import error_bp
 from .tovar.tovar import tovar_bp
-
+from .catalog.catalog import catalog_bp
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(error_bp)
 app.register_blueprint(tovar_bp)
 
+app.register_blueprint(catalog_bp)
 
 
 if __name__ == '__main__':

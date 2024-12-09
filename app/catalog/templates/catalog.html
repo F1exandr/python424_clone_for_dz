@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2> Каталог магазина одежды </h2>
-    <h5> В корзине товаров {{ korzina }} </h5>
+
+     <h1>Каталог товаров</h1>
+    {% for category in categories %}
+        <h2>{{ category.product_type }}</h2>
+        <ul>
+            {% for tovar in tovars if tovar.category_id == category.id %}
+                <li>
+                    {{ tovar.name }} - {{ tovar.price }} руб. (Остаток: {{ tovar.ostatok }})
+                    <img src="{{ tovar.url_photo }}" alt="{{ tovar.name }}" style="width: 50px;">
+                </li>
+            {% else %}
+                <li>Нет товаров в этой категории</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
     {% for i in tovars %}
         {% if i.ostatok!=0 %}
         <div class="col-md-12 text-center">
@@ -20,5 +34,6 @@
 
         <hr>{% endif %}
     {% endfor %}
-{% endblock %}
 
+
+{% endblock %}

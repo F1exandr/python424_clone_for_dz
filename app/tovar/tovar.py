@@ -3,9 +3,10 @@ import uuid
 
 from flask import Blueprint, request, flash, redirect, url_for, render_template
 from flask_login import login_required
-from app.main import app, db
+from app.main import app, db, korzina_list
 from app.models import Tovar
 from .forms import TovarForm
+
 
 tovar_bp = Blueprint('tovar', __name__, template_folder='templates', static_folder='static')
 @app.route('/tovar_add', methods=['GET', 'POST'])
@@ -40,7 +41,7 @@ def tovar_add():
         db.session.commit()
         flash('Товар добавлен')
         return redirect(url_for('home.index'))
-    return render_template('tovar_add.html', form=form)
+    return render_template('tovar/tovar_add.html', form=form)
 
 
 @app.route('/tovar_del/<tovar_id>', methods=['GET', 'POST'])
@@ -55,12 +56,12 @@ def del_tovar(tovar_id: int):
 
 @app.route('/tovar_kupit', methods=['GET', 'POST'])
 def tovar_kupit():
+    global korzina
     id = request.args.get('id')
     print(id)
-    global korzina
     data = Tovar.query.get(id)
-    korzina.append(data)
-    data.ostatok = data.ostatok - 1
+    korzina_list.append(data)
+    data.ostatok -= 1
     db.session.commit()
     print(data)
     return redirect(url_for('home.index'))
@@ -71,8 +72,7 @@ def tovar_page():
     id = request.args.get('id')
     print(id)
     data = Tovar.query.get(id)
-    print(data)
-    return render_template('tovar_page.html', data=data)
+    return render_template('tovar/tovar_page.html', data=data)
 
 
 @app.route('/tovar_new_name/<tovar_id>/<new_name>', methods=['GET', 'POST'])
