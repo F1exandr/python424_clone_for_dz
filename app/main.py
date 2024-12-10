@@ -1,11 +1,13 @@
 from flask import Flask, render_template
 from flask_migrate import Migrate
+from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from database import Config
 from flask_login import LoginManager
 
 app = Flask(__name__, static_folder='static')
 login_manager = LoginManager(app)
+
 
 app.config.from_object(Config)
 # Добавляем путь сохранения изображения
@@ -15,6 +17,7 @@ app.config['UPLOAD_FOLDER'] = '/app/static'
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
+admin = Admin(app, name='My Admin Panel', template_mode='bootstrap4')
 
 from .models import User
 

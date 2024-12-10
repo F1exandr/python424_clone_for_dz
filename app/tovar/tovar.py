@@ -3,13 +3,12 @@ import uuid
 
 from flask import Blueprint, request, flash, redirect, url_for, render_template
 from flask_login import login_required
-from app.main import app, db, korzina_list
+from app.main import app, db
 from app.models import Tovar
 from .forms import TovarForm
 
-
-tovar_bp = Blueprint('tovar', __name__, template_folder='templates', static_folder='static')
-@app.route('/tovar_add', methods=['GET', 'POST'])
+tovar_bp = Blueprint('tovari', __name__, template_folder='templates', static_folder='static')
+@tovar_bp.route('/tovar_add', methods=['GET', 'POST'])
 @login_required
 def tovar_add():
     # flash(current_user.name)
@@ -41,10 +40,10 @@ def tovar_add():
         db.session.commit()
         flash('Товар добавлен')
         return redirect(url_for('home.index'))
-    return render_template('tovar/tovar_add.html', form=form)
+    return render_template('tovar_add.html', form=form)
 
 
-@app.route('/tovar_del/<tovar_id>', methods=['GET', 'POST'])
+@tovar_bp.route('/tovar_del/<tovar_id>', methods=['GET', 'POST'])
 def del_tovar(tovar_id: int):
     data = Tovar.query.get(tovar_id)
     # data = Tovar.query.select(Tovar.id == tovar_id).one()
@@ -54,28 +53,29 @@ def del_tovar(tovar_id: int):
     return redirect(url_for('home.index'))
 
 
-@app.route('/tovar_kupit', methods=['GET', 'POST'])
+@tovar_bp.route('/tovar_kupit', methods=['GET', 'POST'])
 def tovar_kupit():
-    global korzina
     id = request.args.get('id')
     print(id)
+    global korzina
     data = Tovar.query.get(id)
-    korzina_list.append(data)
-    data.ostatok -= 1
+    korzina.append(data)
+    data.ostatok = data.ostatok - 1
     db.session.commit()
     print(data)
     return redirect(url_for('home.index'))
 
 
-@app.route('/tovar_page', methods=['GET', 'POST'])
+@tovar_bp.route('/tovar_page', methods=['GET', 'POST'])
 def tovar_page():
     id = request.args.get('id')
     print(id)
     data = Tovar.query.get(id)
-    return render_template('tovar/tovar_page.html', data=data)
+    print(data)
+    return render_template('tovar_page.html', data=data)
 
 
-@app.route('/tovar_new_name/<tovar_id>/<new_name>', methods=['GET', 'POST'])
+@tovar_bp.route('/tovar_new_name/<tovar_id>/<new_name>', methods=['GET', 'POST'])
 def name_tovar(tovar_id: int, new_name: str):
     data = Tovar.query.get(tovar_id)
     data.name = new_name
