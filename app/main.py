@@ -1,4 +1,5 @@
-from flask import Flask
+import requests
+from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
@@ -50,6 +51,29 @@ app.register_blueprint(error_bp)
 app.register_blueprint(tovar_bp)
 
 app.register_blueprint(catalog_bp)
+
+
+@app.route('/get_course', methods=['GET'])
+def get_course():
+    url = 'https://api.exchangerate.host/latest?base=USD&symbols=RUB'
+    try:
+        response = requests.get(url)
+        print(response.json())
+        print(response.status_code)
+        # print(response.)
+        response.raise_for_status()  # Проверка на ошибки HTTP
+        data = response.json()  # Преобразуем ответ в JSON
+
+        # Извлекаем курс доллара к рублю
+        usd_to_rub = data.get('rates', {}).get('RUB')
+        if usd_to_rub:
+            return jsonify({'currency': 'USD', 'rate': usd_to_rub})
+        else:
+            return jsonify({'error': 'Rate not found'}), 404
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
 
 
 if __name__ == '__main__':

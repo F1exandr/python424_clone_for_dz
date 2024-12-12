@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, current_user
 
 
-
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
