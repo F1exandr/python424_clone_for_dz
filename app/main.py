@@ -10,7 +10,6 @@ from flask_login import LoginManager
 app = Flask(__name__, static_folder='static')
 login_manager = LoginManager(app)
 
-
 app.config.from_object(Config)
 # Добавляем путь сохранения изображения
 # Это так же можно сделать (и правильно сделать) в классе конфиг
@@ -45,6 +44,7 @@ from .home.home import home_bp
 from .error.error import error_bp
 from .tovar.tovar import tovar_bp
 from .catalog.catalog import catalog_bp
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(error_bp)
@@ -57,23 +57,26 @@ app.register_blueprint(catalog_bp)
 def get_course():
     url = 'https://api.exchangerate.host/latest?base=USD&symbols=RUB'
     try:
-        response = requests.get(url)
+        response = requests.get('https://api.exchangerate.host/latest?base=USD&symbols=RUB')
         print(response.json())
         print(response.status_code)
         # print(response.)
         response.raise_for_status()  # Проверка на ошибки HTTP
         data = response.json()  # Преобразуем ответ в JSON
+        # return jsonify(data)
 
         # Извлекаем курс доллара к рублю
-        usd_to_rub = data.get('rates', {}).get('RUB')
-        if usd_to_rub:
-            return jsonify({'currency': 'USD', 'rate': usd_to_rub})
-        else:
-            return jsonify({'error': 'Rate not found'}), 404
+
+        error_type = data.get('error', {}).get('type')
+        succ = data.get('success')
+        return {'err': error_type, 'succ': succ}
+        # if usd_to_rub:
+        #     return jsonify({'currency': 'USD', 'rate': usd_to_rub})
+        # else:
+        #     return jsonify({'error': 'Rate not found'}), 404
 
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
-
 
 
 if __name__ == '__main__':
