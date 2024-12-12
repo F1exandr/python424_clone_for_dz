@@ -1,7 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
+
 from database import Config
 from flask_login import LoginManager
 
