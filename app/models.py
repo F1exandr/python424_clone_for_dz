@@ -23,6 +23,8 @@ class User(UserMixin, db.Model):
     id = sa.Column(sa.Integer, primary_key=True)
     name = sa.Column(sa.String(255), nullable=False, unique=True, index=True)
     password_hash = sa.Column(sa.String(255), nullable=False)
+    email = sa.Column(sa.String(255), nullable=False, unique=True, index=True)
+    phone_number = sa.Column(sa.String(255), nullable=False, unique=True, index=True)
     is_active = sa.Column(sa.Boolean, default=True)
     admin = sa.Column(sa.Boolean, default=False)
 
