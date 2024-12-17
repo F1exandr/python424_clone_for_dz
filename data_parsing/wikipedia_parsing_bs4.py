@@ -2,11 +2,14 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import random
 
 url = 'https://commons.wikimedia.org/wiki/List_of_dog_breeds'
 
-headers = {'User-Agent': 'Mozilla/5.0(Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko)'}
+headers = [{'User-Agent': 'Mozilla/5.0(Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko)'},
+           {'User-Agent': 'Mozilla/5.0(Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko)'}]
 
+headers = random.choice(headers)
 page = requests.get(url, headers=headers)
 
 if page.status_code == 200:
@@ -15,9 +18,9 @@ if page.status_code == 200:
     table = soup.find('table', attrs={'class': 'wikitable sortable'})
 
     names = []
-    groups=[]
-    local_names=[]
-    photographs=[]
+    groups = []
+    local_names = []
+    photographs = []
 
     os.makedirs('dog_images', exist_ok=True)
 
@@ -55,6 +58,3 @@ if page.status_code == 200:
     print(local_names)
     print(photographs)
     print(len(names))
-
-
-
