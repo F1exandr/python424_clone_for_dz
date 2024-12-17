@@ -55,25 +55,13 @@ app.register_blueprint(catalog_bp)
 
 @app.route('/get_course', methods=['GET'])
 def get_course():
-    url = 'https://api.exchangerate.host/latest?base=USD&symbols=RUB'
     try:
         response = requests.get('https://api.exchangerate.host/latest?base=USD&symbols=RUB')
-        print(response.json())
-        print(response.status_code)
-        # print(response.)
-        response.raise_for_status()  # Проверка на ошибки HTTP
-        data = response.json()  # Преобразуем ответ в JSON
-        # return jsonify(data)
-
-        # Извлекаем курс доллара к рублю
+        data = response.json()
 
         error_type = data.get('error', {}).get('type')
         succ = data.get('success')
         return {'err': error_type, 'succ': succ}
-        # if usd_to_rub:
-        #     return jsonify({'currency': 'USD', 'rate': usd_to_rub})
-        # else:
-        #     return jsonify({'error': 'Rate not found'}), 404
 
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
