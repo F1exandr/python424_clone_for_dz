@@ -2,12 +2,39 @@ version: "3.3"
 
 
 services:
-  backend:
+#  backend:
+#    build:
+#      context: .
+#      dockerfile: ./app/Dockerfile
+#    volumes:
+#      - ./app:/app
+#    ports:
+#      - "8080:8080"
+
+  flask_mongo:
     build:
       context: .
-      dockerfile: ./app/Dockerfile
+      dockerfile: ./flask_mongodb/Dockerfile
     volumes:
-      - ./app:/app
+      - ./flask_mongodb:/flask_mongodb
     ports:
-      - "8080:8080"
+      - "5001:5001"
+    links:
+      - mongo
+    networks:
+      - host
 
+  mongo:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - host
+
+volumes:
+  mongo_data:
+
+networks:
+  host:
