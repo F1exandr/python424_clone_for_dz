@@ -6,13 +6,12 @@ from bson import json_util
 
 from bson import ObjectId
 
+
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
         return json.JSONEncoder.default(self, o)
-
-
 
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
