@@ -11,18 +11,18 @@ services:
     ports:
       - "8080:8080"
 
-#  flask_mongo:
-#    build:
-#      context: .
-#      dockerfile: ./flask_mongodb/Dockerfile
-#    volumes:
-#      - ./flask_mongodb:/flask_mongodb
-#    ports:
-#      - "5001:5001"
-#    links:
-#      - mongo
-#    networks:
-#      - host
+  flask_mongo:
+    build:
+      context: .
+      dockerfile: ./flask_mongodb/Dockerfile
+    volumes:
+      - ./flask_mongodb:/flask_mongodb
+    ports:
+      - "5001:5001"
+    links:
+      - mongo
+    networks:
+      - host
 
   mongo:
     image: mongo:5.0

@@ -1,11 +1,21 @@
+import json
+
 import requests
+from bson import ObjectId
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
+from pymongo import MongoClient
 
 from database import Config
 from flask_login import LoginManager
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 app = Flask(__name__, static_folder='static')
 login_manager = LoginManager(app)
@@ -19,6 +29,10 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 admin = Admin(app, name='My Admin Panel', template_mode='bootstrap4')
+client = MongoClient('mongo', 27017)
+db = client['flask_mongodb']
+collection = db['users']
+collection2 = db['tovar']
 
 from .models import User
 

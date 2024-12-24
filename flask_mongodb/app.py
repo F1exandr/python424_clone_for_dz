@@ -18,6 +18,7 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 client = MongoClient('mongo', 27017)
 db = client['flask_mongodb']
 collection = db['users']
+collection2 = db['tovar']
 
 
 @app.route('/add/<name>/<age>')
