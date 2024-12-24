@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user
 
 from .forms import LoginForm
-from ..main import db, collection
+from ..main import db
 from ..models import User
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder='static')
@@ -49,7 +49,7 @@ def user_reg():
         data.set_password(form3.password.data)
         db.session.add(data)
         db.session.commit()
-        collection.insert_one({'name': data})
+        # collection.insert_one({'name': data})
         flash('ПОЛЬЗОВАТЕЛЬ ' + name + ' ЗАРЕГИСТРИРОВАН')
         return redirect(url_for('home.index'))
     return render_template('user_reg.html', form2=form3)

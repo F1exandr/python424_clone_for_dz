@@ -1,21 +1,14 @@
 import json
-
+from datetime import datetime
+import redis
 import requests
-from bson import ObjectId
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from pymongo import MongoClient
 
 from database import Config
 from flask_login import LoginManager
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
 
 app = Flask(__name__, static_folder='static')
 login_manager = LoginManager(app)
@@ -29,10 +22,7 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 admin = Admin(app, name='My Admin Panel', template_mode='bootstrap4')
-client = MongoClient('mongo', 27017)
-db = client['flask_mongodb']
-collection = db['users']
-collection2 = db['tovar']
+# redis_client = redis.Redis(host= '0.0.0.0' , port= 6379 , db= 0 )
 
 from .models import User
 
@@ -67,18 +57,30 @@ app.register_blueprint(tovar_bp)
 app.register_blueprint(catalog_bp)
 
 
-@app.route('/get_course', methods=['GET'])
-def get_course():
-    try:
-        response = requests.get('https://api.exchangerate.host/latest?base=USD&symbols=RUB')
-        data = response.json()
+# @app.route('/get_course', methods=['GET'])
+# def get_course():
+#     try:
+#         response = requests.get('https://api.exchangerate.host/latest?base=USD&symbols=RUB')
+#         data = response.json()
+#
+#         error_type = data.get('error', {}).get('type')
+#         succ = data.get('success')
+#         return {'err': error_type, 'succ': succ}
+#
+#     except requests.exceptions.RequestException as e:
+#         return jsonify({'error': str(e)}), 500
 
-        error_type = data.get('error', {}).get('type')
-        succ = data.get('success')
-        return {'err': error_type, 'succ': succ}
-
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+@app.route('/time', methods=['GET'])
+def time():
+    red = redis.from_url("redis://redis/0")
+    key = 'time'
+    cache = red.get(key)
+    if cache is None:
+        time = datetime.now().strftime('%H:%M:%S')
+        red.set(key, time, ex=10)
+    else:
+        time = cache
+    return time
 
 
 if __name__ == '__main__':
