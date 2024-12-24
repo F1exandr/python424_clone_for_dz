@@ -1,12 +1,9 @@
-import json
 from datetime import datetime
 import redis
-import requests
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-
 from database import Config
 from flask_login import LoginManager
 
@@ -81,6 +78,8 @@ def time():
     else:
         time = cache
     return time
+
+
 
 
 if __name__ == '__main__':
