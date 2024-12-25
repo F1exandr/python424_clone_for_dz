@@ -59,7 +59,7 @@ def tovar_kupit():
     print(id)
     global korzina
     data = Tovar.query.get(id)
-    korzina.append(data)
+    # korzina.append(data)
     data.ostatok = data.ostatok - 1
     db.session.commit()
     print(data)
