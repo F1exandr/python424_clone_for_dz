@@ -22,5 +22,3 @@ def cursval():
         curs = lst[1].text.strip()
     return curs
 
-# print(clock())
-# print(cursval())
